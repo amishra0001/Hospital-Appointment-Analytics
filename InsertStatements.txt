@@ -1,0 +1,63 @@
+
+-- ETL and INSERT statements from Raw data in to DIM and Fact table
+
+
+-- Insert into DimPatient
+INSERT INTO DimPatient (Patient_ID, First_Name, Last_Name, Gender, Age)
+SELECT DISTINCT Patient_ID, First_Name, Last_Name, Gender, Age
+FROM raw_healthcare_dataset_100k;
+
+-- Insert into DimPhysician
+INSERT INTO DimPhysician (Physician_Name)
+SELECT DISTINCT Physician
+FROM raw_healthcare_dataset_100k;
+
+-- Insert into DimDepartment
+INSERT INTO DimDepartment (Department_Name)
+SELECT DISTINCT Department
+FROM raw_healthcare_dataset_100k;
+
+-- Insert into DimVisitType
+INSERT INTO DimVisitType (Visit_Type)
+SELECT DISTINCT Visit_Type
+FROM raw_healthcare_dataset_100k;
+
+-- Insert into DimAppointmentStatus
+INSERT INTO DimAppointmentStatus (Appointment_Status)
+SELECT DISTINCT Appointment_Status
+FROM raw_healthcare_dataset_100k;
+
+-- Insert into DimDate
+INSERT INTO DimDate (DateKey, Full_Date, Day, Month, Year, Quarter)
+SELECT DISTINCT 
+    CAST(CONVERT(CHAR(8), Appointment_Date, 112) AS INT) AS DateKey,
+    Appointment_Date,
+    DAY(Appointment_Date),
+    MONTH(Appointment_Date),
+    YEAR(Appointment_Date),
+    DATEPART(QUARTER, Appointment_Date)
+FROM raw_healthcare_dataset_100k;
+
+-- Insert into FactAppointment
+INSERT INTO FactAppointment (
+    PatientKey, PhysicianKey, DepartmentKey, VisitTypeKey, AppointmentStatusKey, DateKey,
+    Wait_Time_Min, Appointment_Duration_Min
+)
+SELECT 
+   Distinct p.PatientKey,
+    ph.PhysicianKey,
+    d.DepartmentKey,
+    vt.VisitTypeKey,
+    s.AppointmentStatusKey,
+    CAST(CONVERT(CHAR(8), a.Appointment_Date, 112) AS INT) AS DateKey,
+    a.Wait_Time_Min,
+    a.Appointment_Duration_Min
+FROM raw_healthcare_dataset_100k a
+JOIN DimPatient p ON a.Patient_ID = p.Patient_ID
+JOIN DimPhysician ph ON a.Physician = ph.Physician_Name
+JOIN DimDepartment d ON a.Department = d.Department_Name
+JOIN DimVisitType vt ON a.Visit_Type = vt.Visit_Type
+JOIN DimAppointmentStatus s ON a.Appointment_Status = s.Appointment_Status;
+
+
+--select count (*) from raw_healthcare_dataset_100k
