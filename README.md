@@ -34,153 +34,23 @@ Dimension	Description
 🗂️ Database Schema (SQL Server)
 
 
-1️⃣ Create Tables
-
-Below is the structure of the Fact and Dimension tables in SQL Server:
-
--- Dimension: Patient
-CREATE TABLE DimPatient (
-    PatientKey INT IDENTITY(1,1) PRIMARY KEY,
-    Patient_ID INT,
-    First_Name VARCHAR(50),
-    Last_Name VARCHAR(50),
-    Gender VARCHAR(10),
-    Age INT
-);
-
--- Dimension: Physician
-CREATE TABLE DimPhysician (
-    PhysicianKey INT IDENTITY(1,1) PRIMARY KEY,
-    Physician_Name VARCHAR(100)
-);
-
--- Dimension: Department
-CREATE TABLE DimDepartment (
-    DepartmentKey INT IDENTITY(1,1) PRIMARY KEY,
-    Department_Name VARCHAR(100)
-);
-
--- Dimension: Visit Type
-CREATE TABLE DimVisitType (
-    VisitTypeKey INT IDENTITY(1,1) PRIMARY KEY,
-    Visit_Type VARCHAR(50)
-);
-
--- Dimension: Appointment Status
-CREATE TABLE DimAppointmentStatus (
-    AppointmentStatusKey INT IDENTITY(1,1) PRIMARY KEY,
-    Appointment_Status VARCHAR(50)
-);
-
--- Dimension: Date
-CREATE TABLE DimDate (
-    DateKey INT PRIMARY KEY,
-    Full_Date DATE,
-    Day INT,
-    Month INT,
-    Year INT,
-    Quarter INT
-);
-
--- Fact: Appointment
-CREATE TABLE FactAppointment (
-    AppointmentKey INT IDENTITY(1,1) PRIMARY KEY,
-    PatientKey INT,
-    PhysicianKey INT,
-    DepartmentKey INT,
-    VisitTypeKey INT,
-    AppointmentStatusKey INT,
-    DateKey INT,
-    Wait_Time_Min INT,
-    Appointment_Duration_Min INT,
-    FOREIGN KEY (PatientKey) REFERENCES DimPatient(PatientKey),
-    FOREIGN KEY (PhysicianKey) REFERENCES DimPhysician(PhysicianKey),
-    FOREIGN KEY (DepartmentKey) REFERENCES DimDepartment(DepartmentKey),
-    FOREIGN KEY (VisitTypeKey) REFERENCES DimVisitType(VisitTypeKey),
-    FOREIGN KEY (AppointmentStatusKey) REFERENCES DimAppointmentStatus(AppointmentStatusKey),
-    FOREIGN KEY (DateKey) REFERENCES DimDate(DateKey)
-);
+1️⃣ Create Tables sql file has been uploaded in the file upload sections.
 
 2️⃣ Data Loading (ETL from Staging Table)
 
-Once your raw CSV data is loaded into a staging table , use these SQL scripts to populate your dimensions and fact table:
+Once your raw CSV data is loaded into a staging table , use these SQL scripts to populate your dimensions and fact table: The SQL files have beeb uploaded.
 
--- Insert into DimPatient
-INSERT INTO DimPatient (Patient_ID, First_Name, Last_Name, Gender, Age)
-SELECT DISTINCT Patient_ID, First_Name, Last_Name, Gender, Age
-FROM stg_HealthcareAppointments;
-
--- Insert into DimPhysician
-INSERT INTO DimPhysician (Physician_Name)
-SELECT DISTINCT Physician
-FROM stg_HealthcareAppointments;
-
--- Insert into DimDepartment
-INSERT INTO DimDepartment (Department_Name)
-SELECT DISTINCT Department
-FROM stg_HealthcareAppointments;
-
--- Insert into DimVisitType
-INSERT INTO DimVisitType (Visit_Type)
-SELECT DISTINCT Visit_Type
-FROM stg_HealthcareAppointments;
-
--- Insert into DimAppointmentStatus
-INSERT INTO DimAppointmentStatus (Appointment_Status)
-SELECT DISTINCT Appointment_Status
-FROM stg_HealthcareAppointments;
-
--- Insert into DimDate
-INSERT INTO DimDate (DateKey, Full_Date, Day, Month, Year, Quarter)
-SELECT DISTINCT 
-    CAST(CONVERT(CHAR(8), Appointment_Date, 112) AS INT) AS DateKey,
-    Appointment_Date,
-    DAY(Appointment_Date),
-    MONTH(Appointment_Date),
-    YEAR(Appointment_Date),
-    DATEPART(QUARTER, Appointment_Date)
-FROM stg_HealthcareAppointments;
-
--- Insert into FactAppointment
-INSERT INTO FactAppointment (
-    PatientKey, PhysicianKey, DepartmentKey, VisitTypeKey, AppointmentStatusKey, DateKey,
-    Wait_Time_Min, Appointment_Duration_Min
-)
-SELECT 
-  DISTINCT  p.PatientKey,
-    ph.PhysicianKey,
-    d.DepartmentKey,
-    vt.VisitTypeKey,
-    s.AppointmentStatusKey,
-    CAST(CONVERT(CHAR(8), a.Appointment_Date, 112) AS INT) AS DateKey,
-    a.Wait_Time_Min,
-    a.Appointment_Duration_Min
-FROM stg_HealthcareAppointments a
-JOIN DimPatient p ON a.Patient_ID = p.Patient_ID
-JOIN DimPhysician ph ON a.Physician = ph.Physician_Name
-JOIN DimDepartment d ON a.Department = d.Department_Name
-JOIN DimVisitType vt ON a.Visit_Type = vt.Visit_Type
-JOIN DimAppointmentStatus s ON a.Appointment_Status = s.Appointment_Status;
 
 📊 What You Can Analyze
-
 Once your schema is populated, you can easily explore insights like:
-
 ✨ Operational Insights
-
 -->  Average wait time per department
 -->  Appointment completion vs. no-show rate
-
 Patient demographics by department
-
 📅 Time-Based Trends
-
 Appointment volume by month, quarter, or year
-
 Doctor workload across different periods
-
 👩‍⚕️ Performance Insights
-
 Top-performing physicians or departments
 
 Average appointment duration and efficiency
