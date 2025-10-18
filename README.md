@@ -1,75 +1,87 @@
-# Hospital_Appointment_Analytics
-Healthcare Data Warehouse – Star Schema Project
+# 🏥 **Hospital Appointment Analytics**
+**Healthcare Data Warehouse – Star Schema Project**
 
-Overview
+---
 
-Welcome to the Healthcare Data Warehouse Project, a comprehensive example of how to design and implement a Star Schema for healthcare analytics.
-This project transforms raw patient appointment data into a clean, analytical data model ready for use in SQL Server, Power BI, or Tableau.
+## 📘 **Overview**
+Welcome to the **Healthcare Data Warehouse Project**, a comprehensive example of designing and implementing a **Star Schema** for healthcare analytics.  
 
-The goal is to help analysts and data engineers understand how to structure, load, and analyze healthcare appointment data efficiently — from data staging to insight generation.
+This project transforms **raw patient appointment data** into a clean, analytical data model ready for use in **SQL Server, Power BI, or Tableau**.  
 
-🧩 Data Model – Star Schema Design
+**Goal:**  
+Enable analysts and data engineers to understand how to **structure, load, and analyze healthcare appointment data efficiently**, from **data staging** to **insight generation**.
 
-The data warehouse follows a Star Schema architecture where a central Fact Table connects to multiple Dimension Tables.
-This structure supports fast and flexible analytical queries, enabling insights into appointments, physicians, departments, and patient demographics.
+---
 
-🪙 Fact Table
+## 🧩 **Data Model – Star Schema Design**
+The data warehouse uses a **Star Schema architecture**:  
+- A central **Fact Table** connects to multiple **Dimension Tables**  
+- Supports **fast and flexible analytical queries** for insights into appointments, physicians, departments, and patient demographics
 
-FactAppointment
+---
 
-Central table containing appointment-level data and measures such as:
+## 🪙 **Fact Table**
 
-⏱️ Wait Time (Minutes)
+### **FactAppointment**
+Central table containing **appointment-level data** and measures such as:  
+- ⏱️ **Wait Time (Minutes)**  
+- 🕒 **Appointment Duration (Minutes)**  
 
-🕒 Appointment Duration (Minutes)
+---
 
-🌐 Dimension Tables
-Dimension	Description
-🧍 DimPatient	Stores patient details — ID, name, gender, and age.
-👨‍⚕️ DimPhysician	Contains physician information for analysis by provider.
-🏢 DimDepartment	Represents hospital or clinic departments.
-📋 DimVisitType	Categorizes appointment types (Consultation, Follow-up, etc.).
-📅 DimDate	Provides a detailed date dimension for time-series analysis.
-🔖 DimAppointmentStatus	Tracks the appointment outcome (Completed, Cancelled, or No-Show).
-🗂️ Database Schema (SQL Server)
+## 🌐 **Dimension Tables**
 
+| Dimension | Description |
+|-----------|-------------|
+| 🧍 **DimPatient** | Patient details — ID, Name, Gender, Age |
+| 👨‍⚕️ **DimPhysician** | Physician information for provider-level analysis |
+| 🏢 **DimDepartment** | Hospital or clinic departments |
+| 📋 **DimVisitType** | Appointment types (Consultation, Follow-up, etc.) |
+| 📅 **DimDate** | Date dimension for time-series analysis |
+| 🔖 **DimAppointmentStatus** | Appointment outcome (Completed, Cancelled, No-Show) |
 
-1️⃣ Create Tables sql file has been uploaded in the file upload sections.
+---
 
-2️⃣ Data Loading (ETL from Staging Table)
+## 🗂️ **Database Schema (SQL Server)**
+1️⃣ **Create Tables**  
+- `CREATE_TABLES.sql` file uploaded in repository  
 
-Once your raw CSV data is loaded into a staging table , use these SQL scripts to populate your dimensions and fact table: The SQL files have beeb uploaded.
+2️⃣ **Data Loading (ETL from Staging Table)**  
+- Load raw CSV into **staging table**  
+- Execute SQL scripts to populate **Dimension** and **Fact** tables (`INSERT_DATA.sql` uploaded)
 
+---
 
-📊 What You Can Analyze
-Once your schema is populated, you can easily explore insights like:
-✨ Operational Insights
--->  Average wait time per department
--->  Appointment completion vs. no-show rate
-Patient demographics by department
-📅 Time-Based Trends
-Appointment volume by month, quarter, or year
-Doctor workload across different periods
-👩‍⚕️ Performance Insights
-Top-performing physicians or departments
+## 📊 **What You Can Analyze**
 
-Average appointment duration and efficiency
+### ✨ **Operational Insights**
+- Average **wait time per department**  
+- **Appointment completion vs. no-show rates**  
+- Patient demographics by department  
 
-⚙️ Tech Stack
+### 📅 **Time-Based Trends**
+- Appointment volume by **month, quarter, or year**  
+- Doctor workload across different periods  
 
-🧱 Database: Microsoft SQL Server
+### 👩‍⚕️ **Performance Insights**
+- Top-performing physicians or departments  
+- Average **appointment duration** and **efficiency**
 
-🧮 ETL: SQL Scripts from Staging to Dimensions & Facts
+---
 
-This start schema is good for creating data visualization.
-📊 Visualization Tools: Power BI / Tableau
+## ⚙️ **Tech Stack**
+- 🧱 **Database:** Microsoft SQL Server  
+- 🧮 **ETL:** SQL Scripts from Staging → Dimensions & Facts  
+- 📊 **Visualization Tools:** Power BI / Tableau  
+- 🧰 **Data Source:** Synthetic Healthcare Appointment Data  
 
-🧰 Data Source: Synthetic Healthcare Appointment Data
+---
 
-Load the Raw Data
-Import your healthcare dataset (HealthcareAppointments.csv) into a staging table.
+## 🛠️ **Getting Started**
 
-Run the SQL Scripts
-Execute the CREATE_TABLES.sql and INSERT_DATA.sql scripts in SQL Server.
+### 1️⃣ Load the Raw Data
+- Import `HealthcareAppointments.csv` into a **staging table**  
 
-
+### 2️⃣ Run the SQL Scripts
+- Execute `CREATE_TABLES.sql`  
+- Execute `INSERT_DATA.sql`  
